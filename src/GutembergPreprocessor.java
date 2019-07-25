@@ -119,8 +119,8 @@ public class GutembergPreprocessor {
 		//Processor.tagSentences("data/treebank/sentences", "output/treebank/tagged/corenlp", new StanfordCoreNLPWrapper(), POSTaggerOutputType.Text);
 		//Processor.tagSentences("data/treebank/sentences", "output/treebank/tagged/opennlp2", new OpenNLPWrapper(), POSTaggerOutputType.Text);		
 		
-		//Processor.parseSentences("output/gutenberg/sentences/filtered", "output/gutenberg/parsed/opennlp", new OpenNLPWrapper(), ParserOutputType.Text);
-		Processor.parseSentences("output/gutenberg/sentences/filtered", "output/gutenberg/parsed/corenlp", new StanfordCoreNLPWrapper(), ParserOutputType.Text);
+		Processor.parseSentences("output/gutenberg/sentences/filtered", "output/gutenberg/parsed/opennlp", new OpenNLPWrapper(), ParserOutputType.Text);
+		//Processor.parseSentences("output/gutenberg/sentences/filtered", "output/gutenberg/parsed/corenlp", new StanfordCoreNLPWrapper(), ParserOutputType.Text);
 		//Processor.parseSentences("output/gutenberg/sentences/test", "output/gutenberg/parsed/test", new StanfordCoreNLPWrapper(), ParserOutputType.Text);
 		
 	}

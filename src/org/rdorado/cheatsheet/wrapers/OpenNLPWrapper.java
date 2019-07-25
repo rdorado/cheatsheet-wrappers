@@ -82,7 +82,9 @@ public class OpenNLPWrapper implements SenteceSegmenter, POSTagger, Parser{
 	public ParseTree parse(String sentence) {
 		if(parser != null) {
 			ParseTree result = new ParseTree();
-			Parse topParses[] = ParserTool.parseLine(sentence, this.parser, 1);
+			
+			//Parse topParses[] = ParserTool.parseLine(sentence, this.parser, 1);
+			Parse topParses[] = ParserTool.parseLine(sentence, this.parser, this.tokenizer, 1);
 			toParseTree(topParses[0], result);
 			return result;
 			
