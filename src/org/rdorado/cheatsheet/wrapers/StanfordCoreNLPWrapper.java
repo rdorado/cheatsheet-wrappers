@@ -74,6 +74,7 @@ public class StanfordCoreNLPWrapper implements SenteceSegmenter, POSTagger, Pars
 		return result;
 	}
 	
+
 	
 	@Override
 	public ParseTree parse(String sentence) {
@@ -81,32 +82,34 @@ public class StanfordCoreNLPWrapper implements SenteceSegmenter, POSTagger, Pars
 		Annotation document = new Annotation(sentence);
 		pipeline.annotate(document);
 		List<CoreMap> sentences = document.get(SentencesAnnotation.class);
+		//System.out.println("-->");
 		for(CoreMap taggedsentence: sentences) {
-			Tree constituencyParse = taggedsentence.get(TreeAnnotation.class);
-			result.setText(constituencyParse.toString());
+			Tree constituencyParse = taggedsentence.get(TreeAnnotation.class);			
+			toParseTree(constituencyParse, result);
+			//result.setText("'"+constituencyParse.toString()+"'");			
 		}
 		return result;
 	}
 	
-	public static void main(String[] args){
-
-		/*MaxentTagger maxentTagger = new MaxentTagger("edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger");
-
-    String tag = maxentTagger.tagString("He half closed his eyes and searched the horizon.");
-    String[] eachTag = tag.split("\\s+");
-
-    for(int i = 0; i< eachTag.length; i++) {
-      System.out.print(eachTag[i].split("_")[0] +"_"+ eachTag[i].split("_")[1]+" ");
-    }*/
-		
-		StanfordCoreNLPWrapper coreNLPWrapper = new StanfordCoreNLPWrapper();
-		//coreNLPWrapper.tag("The dog ate chocolate.");
-		coreNLPWrapper.tag("He half closed his eyes and searched the horizon.");
+	private void toParseTree(Tree constituencyParse, ParseTree result) {
+		//System.out.println("ss");
+		//result.createChild().setText( "ddd" );
+		if ( constituencyParse.value().equals("ROOT") ) {			
+			toParseTree( constituencyParse.firstChild(), result);
+			return;
+		}
+						
+		result.setTag(constituencyParse.value());
+		for (Tree t : constituencyParse.children()) {
+			if (t.isLeaf()) {
+				result.setText(t.value());
+			}
+			else {
+				toParseTree(t, result.createChild());
+			}
+			
+		}
 	}
-
-
-
-
 
 
 }

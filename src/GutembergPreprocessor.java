@@ -121,6 +121,7 @@ public class GutembergPreprocessor {
 		
 		//Processor.parseSentences("output/gutenberg/sentences/filtered", "output/gutenberg/parsed/opennlp", new OpenNLPWrapper(), ParserOutputType.Text);
 		Processor.parseSentences("output/gutenberg/sentences/filtered", "output/gutenberg/parsed/corenlp", new StanfordCoreNLPWrapper(), ParserOutputType.Text);
+		//Processor.parseSentences("output/gutenberg/sentences/test", "output/gutenberg/parsed/test", new StanfordCoreNLPWrapper(), ParserOutputType.Text);
 		
 	}
 
