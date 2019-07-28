@@ -5,13 +5,29 @@ import re
 
 from nltk.corpus import treebank
 from nltk.corpus import brown
+from nltk.corpus import cess_cat
+from nltk.corpus import dependency_treebank
+from nltk.corpus import conll2007
+from nltk.corpus import conll2000
+from nltk.corpus import conll2002
+from nltk.corpus import universal_treebanks
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 from sacremoses import MosesDetokenizer
+
 # treebank
 #nltk.download('treebank')
 #nltk.download('universal_tagset')
 #nltk.corpus.brown.sents()
 
+
+class Tree:
+	
+	def __init__(self):
+		self.tag = None
+		self.tag = None
+		
+def tranform(obj):
+	print(str(obj.__class__))	
 
 def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
 	#print( os.path.dirname(outputRaw) )
@@ -36,12 +52,15 @@ def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
 			words = []
 			tagged = []
 			nwrtmp = 0
-			sent = nltkcorpus.tagged_sents(sentid)[0]
-			for word in sent:
-				if word[1] != "-NONE-":
-					words.append(word[0])
-					tagged.append(word[0]+"_"+word[1])
-					nwrtmp+=1	
+			
+			sent = nltkcorpus.tagged_sents(sentid)
+			if len(sent) > 0:
+				sent = sent[0] 
+				for word in sent:
+					if word[1] != "-NONE-":
+						words.append(str(word[0]))
+						tagged.append(str(word[0])+"_"+str(word[1]))
+						nwrtmp+=1	
 					
 			
 			if re.match('^[a-zA-Z0-9 ,.]+$'," ".join(words)): 				
@@ -52,7 +71,8 @@ def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
 				rawfile.write("  <sentence>"+(detok.detokenize(words)) +"</sentence>\n")
 				rawfile.write(" </paragraph>\n")
 				taggedFile.write(" ".join(tagged)+"\n")
-				parsedFile.write(re.sub(" +"," ",str(treebank.parsed_sents(sentid)[0])).replace("\n","").replace(") (",")(")+"\n")
+				tree = tranform(nltkcorpus.parsed_sents(sentid)[0])
+				#	parsedFile.write(re.sub(" +"," ",str()).replace("\n","").replace(") (",")(")+"\n")
 
 		rawfile.write("</document>\n")
 	print("Sentences: "+str(nsents))
