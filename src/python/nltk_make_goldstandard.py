@@ -5,14 +5,22 @@ import re
 
 from nltk.corpus import treebank
 from nltk.corpus import brown
+from nltk.corpus import cess_cat
+from nltk.corpus import dependency_treebank
+from nltk.corpus import conll2007
+from nltk.corpus import conll2000
+from nltk.corpus import conll2002
+from nltk.corpus import universal_treebanks
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 from sacremoses import MosesDetokenizer
+
 # treebank
 #nltk.download('treebank')
 #nltk.download('universal_tagset')
 #nltk.corpus.brown.sents()
 
 
+<<<<< HEAD
 def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
 	#print( os.path.dirname(outputRaw) )
 	detok = MosesDetokenizer(lang='en')
@@ -57,11 +65,22 @@ def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
 	print("Sentences: "+str(nsents))
 	print("Words: "+str(nwords))
 
-
 def makeParseGoldstandard(nltkcorpus, outputRaw, outputTagged):
+=======
+class Tree:
+	
+	def __init__(self):
+		self.tag = None
+		self.tag = None
+		
+def tranform(obj):
+	print(str(obj.__class__))	
+
+def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
+>>>>>>> becf11d3f782562c0b26a75bcf8127e6bb5dbac4
 	#print( os.path.dirname(outputRaw) )
 	detok = MosesDetokenizer(lang='en')
-	#detok = TreebankWordDetokenizer()
+	#detok = TreebankWordDetokenizer()ou
 	
 	if not os.path.exists(os.path.dirname(outputRaw)):
 		os.makedirs(os.path.dirname(outputRaw))		
@@ -69,20 +88,28 @@ def makeParseGoldstandard(nltkcorpus, outputRaw, outputTagged):
 	if not os.path.exists(os.path.dirname(outputTagged)):
 		os.makedirs(os.path.dirname(outputTagged))		
 	
-	with open(outputRaw, 'w') as rawfile, open(outputTagged, 'w') as taggedFile:
+	if not os.path.exists(os.path.dirname(outputParsed)):
+		os.makedirs(os.path.dirname(outputParsed))	
+		
+	with open(outputRaw, 'w') as rawfile, open(outputTagged, 'w') as taggedFile, open(outputParsed, 'w') as parsedFile:
 		rawfile.write("<?xml version='1.0' encoding='UTF-8'?>\n")
 		rawfile.write("<document>\n")
 		nsents = 0
 		nwords = 0	
-		for sent in nltkcorpus.tagged_sents():
+		for sentid in nltkcorpus.fileids():
 			words = []
 			tagged = []
 			nwrtmp = 0
-			for word in sent:
-				if word[1] != "-NONE-":
-					words.append(word[0])
-					tagged.append(word[0]+"_"+word[1])
-					nwrtmp+=1	
+			
+			sent = nltkcorpus.tagged_sents(sentid)
+			if len(sent) > 0:
+				sent = sent[0] 
+				for word in sent:
+					if word[1] != "-NONE-":
+						words.append(str(word[0]))
+						tagged.append(str(word[0])+"_"+str(word[1]))
+						nwrtmp+=1	
+					
 			
 			if re.match('^[a-zA-Z0-9 ,.]+$'," ".join(words)): 				
 				nsents+=1
@@ -92,9 +119,12 @@ def makeParseGoldstandard(nltkcorpus, outputRaw, outputTagged):
 				rawfile.write("  <sentence>"+(detok.detokenize(words)) +"</sentence>\n")
 				rawfile.write(" </paragraph>\n")
 				taggedFile.write(" ".join(tagged)+"\n")
+				tree = tranform(nltkcorpus.parsed_sents(sentid)[0])
+				#	parsedFile.write(re.sub(" +"," ",str()).replace("\n","").replace(") (",")(")+"\n")
+
 		rawfile.write("</document>\n")
 	print("Sentences: "+str(nsents))
 	print("Words: "+str(nwords))
 
 	
-makeGoldstandard(treebank, "data/treebank/sentences/sentences.xml", "data/treebank/tagged/tagged.txt")
+makeGoldstandard(treebank, "data/treebank/sentences/sentences.xml", "data/treebank/tagged/tagged.txt", "data/treebank/parsed/parsed.txt")

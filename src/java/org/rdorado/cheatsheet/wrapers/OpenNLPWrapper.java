@@ -37,8 +37,8 @@ public class OpenNLPWrapper implements SenteceSegmenter, POSTagger, Parser{
 			InputStream inputStream = new FileInputStream("models/opennlp/en-sent.bin");
 			detector = new SentenceDetectorME(new SentenceModel(inputStream));
 			
-			//inputStream = new FileInputStream("models/opennlp/en-pos-maxent.bin");
-			inputStream = new FileInputStream("models/opennlp/en-pos-maxent-gutenberg.model");
+			inputStream = new FileInputStream("models/opennlp/en-pos-maxent.bin");
+			//inputStream = new FileInputStream("models/opennlp/en-pos-maxent-gutenberg.model");
 			tagger = new POSTaggerME(new POSModel(inputStream));
 			
 			inputStream = new FileInputStream("models/opennlp/en-token.bin");
@@ -111,16 +111,12 @@ public class OpenNLPWrapper implements SenteceSegmenter, POSTagger, Parser{
 	}
 
 
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		OpenNLPWrapper wrapper = new OpenNLPWrapper();
-		
-		/*for (String string : wrapper.segment("This is a sentence. This is another sentence.")) {
-			System.out.println(string);
-		}*/
 		
 		for(TaggedToken token : (wrapper.tag("The dog ate chocolate.")).getTaggedTokens()) {
 			System.out.println(token);
 		};
-	}
+	}*/
 
 }
