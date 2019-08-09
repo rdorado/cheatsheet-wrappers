@@ -23,12 +23,44 @@ from sacremoses import MosesDetokenizer
 class Tree:
 	
 	def __init__(self):
+		self.children = []
 		self.tag = None
-		self.tag = None
+		self.text = None
 		
-def tranform(obj):
-	print(str(obj.__class__))	
-
+	def mkchild(self):
+		tree = Tree()
+		self.children.append(tree)
+		return tree
+	
+	def fixPennTags(self):
+		if "-" in self.tag:
+			indx = self.tag.index("-")
+			self.tag = self.tag[:indx]
+		for child in self.children:
+			child.fixPennTags()
+			
+	def print(self):
+		print("("+self.tag+" ", end = '')
+		if self.text != None: print(self.text, end = '')
+		for child in self.children:
+			child.print()
+		print(")", end = '')
+		
+	def to_str(self):
+		resp = "("+self.tag+" "
+		if self.text != None: resp+=self.text
+		for child in self.children:
+			resp+= child.to_str()
+		return resp+")"
+		
+def tranform(nltktree, restree):
+	restree.tag = nltktree._label
+	for child in nltktree:
+		if isinstance(child, nltk.tree.Tree):
+			tranform(child, restree.mkchild())
+		elif isinstance(child, str):
+			restree.text = child
+			
 def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
 	#print( os.path.dirname(outputRaw) )
 	detok = MosesDetokenizer(lang='en')
@@ -71,7 +103,10 @@ def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
 				rawfile.write("  <sentence>"+(detok.detokenize(words)) +"</sentence>\n")
 				rawfile.write(" </paragraph>\n")
 				taggedFile.write(" ".join(tagged)+"\n")
-				tree = tranform(nltkcorpus.parsed_sents(sentid)[0])
+				tree = Tree()
+				tranform(nltkcorpus.parsed_sents(sentid)[0], tree)
+				tree.fixPennTags()
+				parsedFile.write(tree.to_str()+"\n")
 				#	parsedFile.write(re.sub(" +"," ",str()).replace("\n","").replace(") (",")(")+"\n")
 
 		rawfile.write("</document>\n")
