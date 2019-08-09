@@ -1,0 +1,38 @@
+<project>  
+  <config 
+  	python="python3"
+  	java="java"
+  />   
+  <task name="segment">
+    <input>
+      <directory name="data/gutenberg"/>
+      <directory name="data/wikipedia"/>      
+      <file name="data/brown-nltk.txt"/>
+    </input>      	
+    <segmenter 	id="opennlp"
+    			type="java" 
+    			class="org.rdorado.cheatsheet.wrappers.OpenNLPWrapper" 
+    			output="output/gutenberg/sentences/opennlp" />
+    <segmenter 	id="stanford"
+    			type="java" 
+    			class="org.rdorado.cheatsheet.wrappers.StanfordNLPWrapper"
+    			output="output/gutenberg/sentences/corenlp" />
+    <segmenter 	id="nltk"
+    			type="python" 
+    			script="python/nltk_wrapper.py"
+    			output="output/gutenberg/sentences/nltk" />	    			
+    <evaluator reportfile="sentence-eval.txt" class="org.rdorado.cheatsheet.segmenter.DefaultSegmenterEvaluator">
+    	<goldstandard name="brown-nltk" target="data/brown-nltk"/>
+    </evaluator>        
+  </task>
+  <task name="postag">
+    <postagger class="org.rdorado.cheatsheet.wrappers.OpenNLPWrapper"/>
+    <segmenter class="org.rdorado.cheatsheet.wrappers.StanfordNLPWrapper"/>
+    <evaluator class="org.rdorado.cheatsheet.tagger.DefaultPOSTaggerEvaluator"/>    
+  </task>
+  <task name="parse">
+    <parser class="org.rdorado.cheatsheet.wrappers.OpenNLPWrapper"/>
+    <parser class="org.rdorado.cheatsheet.wrappers.StanfordNLPWrapper"/>
+    <evaluator class="org.rdorado.cheatsheet.tagger.DefaultParserEvaluator"/>    
+  </task>  
+</project>
