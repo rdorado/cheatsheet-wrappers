@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 import org.rdorado.cheatsheet.parser.ParseTree;
 import org.rdorado.cheatsheet.parser.Parser;
-import org.rdorado.cheatsheet.segmenter.SenteceSegmenter;
+import org.rdorado.cheatsheet.segmenter.SentenceSegmenter;
 import org.rdorado.cheatsheet.tagger.POSTagger;
 import org.rdorado.cheatsheet.tagger.TaggedSentence;
 import org.rdorado.cheatsheet.tagger.TaggedToken;
@@ -25,7 +25,7 @@ import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 
-public class OpenNLPWrapper implements SenteceSegmenter, POSTagger, Parser{
+public class OpenNLPWrapper implements SentenceSegmenter, POSTagger, Parser{
 
 	SentenceDetector detector;
 	POSTaggerME tagger;

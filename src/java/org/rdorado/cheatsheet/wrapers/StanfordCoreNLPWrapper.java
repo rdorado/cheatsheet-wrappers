@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import org.rdorado.cheatsheet.parser.ParseTree;
 import org.rdorado.cheatsheet.parser.Parser;
-import org.rdorado.cheatsheet.segmenter.SenteceSegmenter;
+import org.rdorado.cheatsheet.segmenter.SentenceSegmenter;
 import org.rdorado.cheatsheet.tagger.POSTagger;
 import org.rdorado.cheatsheet.tagger.TaggedSentence;
 
@@ -24,7 +24,7 @@ import edu.stanford.nlp.util.CoreMap;
 
 //import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
-public class StanfordCoreNLPWrapper implements SenteceSegmenter, POSTagger, Parser{
+public class StanfordCoreNLPWrapper implements SentenceSegmenter, POSTagger, Parser{
 
 	StanfordCoreNLP pipeline;
 	

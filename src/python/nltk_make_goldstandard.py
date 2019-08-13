@@ -20,7 +20,50 @@ from sacremoses import MosesDetokenizer
 #nltk.corpus.brown.sents()
 
 
-<<<<< HEAD
+class Tree:
+	
+	def __init__(self):
+		self.children = []
+		self.tag = None
+		self.text = None
+		
+	def mkchild(self):
+		tree = Tree()
+		self.children.append(tree)
+		return tree
+	
+	def fixPennTags(self):
+		if "-" in self.tag:
+			indx = self.tag.index("-")
+			self.tag = self.tag[:indx]
+		for child in self.children:
+			child.fixPennTags()
+			
+	def print(self):
+		print("("+self.tag+" ", end = '')
+		if self.text != None: print(self.text, end = '')
+		for child in self.children:
+			child.print()
+		print(")", end = '')
+		
+	def to_str(self):
+		resp = "("+self.tag+" "
+		if self.text != None: resp+=self.text
+		for child in self.children:
+			resp+= child.to_str()
+		return resp+")"
+
+
+
+def tranform(nltktree, restree):
+	restree.tag = nltktree._label
+	for child in nltktree:
+		if isinstance(child, nltk.tree.Tree):
+			tranform(child, restree.mkchild())
+		elif isinstance(child, str):
+			restree.text = child
+
+
 def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
 	#print( os.path.dirname(outputRaw) )
 	detok = MosesDetokenizer(lang='en')
@@ -64,52 +107,9 @@ def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
 		rawfile.write("</document>\n")
 	print("Sentences: "+str(nsents))
 	print("Words: "+str(nwords))
-
-def makeParseGoldstandard(nltkcorpus, outputRaw, outputTagged):
-=======
-class Tree:
-	
-	def __init__(self):
-		self.children = []
-		self.tag = None
-		self.text = None
 		
-	def mkchild(self):
-		tree = Tree()
-		self.children.append(tree)
-		return tree
-	
-	def fixPennTags(self):
-		if "-" in self.tag:
-			indx = self.tag.index("-")
-			self.tag = self.tag[:indx]
-		for child in self.children:
-			child.fixPennTags()
-			
-	def print(self):
-		print("("+self.tag+" ", end = '')
-		if self.text != None: print(self.text, end = '')
-		for child in self.children:
-			child.print()
-		print(")", end = '')
-		
-	def to_str(self):
-		resp = "("+self.tag+" "
-		if self.text != None: resp+=self.text
-		for child in self.children:
-			resp+= child.to_str()
-		return resp+")"
-		
-def tranform(nltktree, restree):
-	restree.tag = nltktree._label
-	for child in nltktree:
-		if isinstance(child, nltk.tree.Tree):
-			tranform(child, restree.mkchild())
-		elif isinstance(child, str):
-			restree.text = child
-			
+'''
 def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
->>>>>>> becf11d3f782562c0b26a75bcf8127e6bb5dbac4
 	#print( os.path.dirname(outputRaw) )
 	detok = MosesDetokenizer(lang='en')
 	#detok = TreebankWordDetokenizer()ou
@@ -160,6 +160,6 @@ def makeGoldstandard(nltkcorpus, outputRaw, outputTagged, outputParsed):
 		rawfile.write("</document>\n")
 	print("Sentences: "+str(nsents))
 	print("Words: "+str(nwords))
-
+'''
 	
 makeGoldstandard(treebank, "data/treebank/sentences/sentences.xml", "data/treebank/tagged/tagged.txt", "data/treebank/parsed/parsed.txt")
